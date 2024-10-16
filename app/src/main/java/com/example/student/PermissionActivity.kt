@@ -97,10 +97,14 @@ class PermissionActivity : AppCompatActivity() {
     }
 
 
+
     private fun navigateToNextPage() {
+
         val intent = Intent(this, StudentActivity::class.java)
         startActivity(intent)
         finish() // Close PermissionActivity so the user cannot go back
+
+
     }
 
 

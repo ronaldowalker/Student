@@ -1,7 +1,9 @@
 package com.example.student
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.wifi.WifiManager
 import android.net.wifi.p2p.WifiP2pManager
 import android.net.wifi.p2p.WifiP2pManager.Channel
@@ -11,6 +13,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import java.io.*
 import java.net.Socket
 import java.security.MessageDigest
@@ -31,7 +34,7 @@ class StudentActivity : AppCompatActivity() {
     private var className: String = ""
     private var lecturerIpAddress = "" // Assume lecturer's IP is known/obtained through Wi-Fi Direct
 
-    private val port = 8888 // Predefined port for communication
+    private val port = 9999// Predefined port for communication
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,6 +86,23 @@ class StudentActivity : AppCompatActivity() {
     }
 
     private fun discoverPeers() {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.NEARBY_WIFI_DEVICES
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return
+        }
         wifiP2pManager.discoverPeers(channel, object : WifiP2pManager.ActionListener {
             override fun onSuccess() {
                 Toast.makeText(this@StudentActivity, "Searching for nearby classes...", Toast.LENGTH_SHORT).show()
